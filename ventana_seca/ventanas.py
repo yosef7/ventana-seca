@@ -10,6 +10,8 @@ from .pronostico import Hora
 CALOR_C = 32
 UV_ALTO = 7
 UMBRAL_BUENA = 60
+# Dos ventanas del mismo día deben estar separadas para que haya una opción real.
+SEPARACION = timedelta(hours=3)
 
 
 @dataclass(frozen=True)
@@ -41,7 +43,7 @@ def puntuar(tramo: list[Hora]) -> Ventana:
 
 def candidatas(horas: list[Hora], duracion_h: int, ahora: datetime,
                maximo: int = 5, por_dia: int = 2) -> list[Ventana]:
-    """Las mejores ventanas de día que no se solapan, en orden cronológico.
+    """Las mejores ventanas de día, separadas entre sí, en orden cronológico.
 
     Se dejan hasta `por_dia` por fecha para que haya de dónde escoger: una
     mañana y una tarde, por ejemplo, aunque la tarde puntúe menos.
@@ -60,7 +62,8 @@ def candidatas(horas: list[Hora], duracion_h: int, ahora: datetime,
         if len(elegidas) == maximo:
             break
         mismo_dia = sum(e.inicio.date() == v.inicio.date() for e in elegidas)
-        solapa = any(v.inicio < e.fin and e.inicio < v.fin for e in elegidas)
+        solapa = any(v.inicio < e.fin + SEPARACION and e.inicio < v.fin + SEPARACION
+                     for e in elegidas)
         if mismo_dia < por_dia and not solapa:
             elegidas.append(v)
 

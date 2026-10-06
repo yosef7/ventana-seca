@@ -4,6 +4,7 @@ La idea es mirar la pantalla una vez, guardar el teléfono y salir: el
 recordatorio avisa media hora antes.
 """
 
+import textwrap
 from datetime import datetime, timedelta, timezone
 
 DIAS = ("lun", "mar", "mié", "jue", "vie", "sáb", "dom")
@@ -11,6 +12,7 @@ MESES = ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", 
 # Panamá no cambia de horario: siempre UTC-5.
 PANAMA = timezone(timedelta(hours=-5))
 AVISO_MIN = 30
+ANCHO = 64
 
 
 def dia_es(fecha: datetime) -> str:
@@ -38,11 +40,16 @@ def texto(lugar, ventana, eleccion, pronostico) -> str:
         f" · UV: {v.uv_max:.0f}",
         f"Lleva: {', '.join(eleccion.llevar)}",
         f"Por qué: {eleccion.motivo}",
-        f"Eligió: {origen}",
     ]
+    if not v.buena:
+        # Lo dice el código, no el modelo: un modelo pequeño tiende a suavizar el riesgo.
+        lineas.append(f"Ojo: no es una ventana seca de verdad ({v.lluvia_pct} % de lluvia).")
+    lineas.append(f"Eligió: {origen}")
     if pronostico.desde_copia:
-        lineas.append(f"Sin señal: pronóstico guardado el {dia_es(pronostico.descargado)} "
-                      f"a las {hora_es(pronostico.descargado)}.")
+        lineas.append(f"Sin señal ({pronostico.motivo}): pronóstico guardado el "
+                      f"{dia_es(pronostico.descargado)} a las {hora_es(pronostico.descargado)}")
+    lineas = [corta for linea in lineas
+              for corta in textwrap.wrap(linea, ANCHO, subsequent_indent="  ")]
     ancho = max(len(linea) for linea in lineas)
     borde = "─" * (ancho + 2)
     cuerpo = [f"│ {linea.ljust(ancho)} │" for linea in lineas]

@@ -68,6 +68,9 @@ def pedido(candidatas: list[Ventana], lugar: Lugar, preferencia: str, modelo: st
     return {
         "model": modelo,
         "stream": False,
+        # Elegir entre cinco letras no necesita razonamiento largo: sin él responde
+        # varias veces más rápido en una laptop sin GPU.
+        "think": False,
         "format": esquema,
         "options": {"temperature": 0.2},
         "messages": [

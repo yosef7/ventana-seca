@@ -59,7 +59,7 @@ def test_solo_horas_de_luz_futuras_sin_solapes_y_letras_en_orden():
         assert v.inicio >= datetime(2026, 10, 6, 7, 30)
         assert 6 <= v.inicio.hour and v.fin.hour <= 18
     for a, b in zip(lista, lista[1:]):
-        assert a.fin <= b.inicio
+        assert a.fin + ventanas.SEPARACION <= b.inicio
 
 
 def test_como_maximo_dos_por_dia():
@@ -122,10 +122,11 @@ def test_sin_ollama_decide_la_regla():
     assert eleccion.motivo
 
 
-def test_el_pedido_limita_la_letra_a_las_candidatas():
+def test_el_pedido_limita_la_letra_a_las_candidatas_y_no_razona_de_mas():
     lista = candidatas()
     cuerpo = gemma.pedido(lista, METRO, "", gemma.MODELO)
     assert cuerpo["format"]["properties"]["letra"]["enum"] == [v.letra for v in lista]
+    assert cuerpo["think"] is False
     assert "sin preferencia" in cuerpo["messages"][1]["content"]
 
 
@@ -141,6 +142,17 @@ def test_formato_de_fecha_y_hora_en_espanol():
     assert tarjeta.dia_es(datetime(2026, 10, 7)) == "mié 7 oct"
     assert tarjeta.hora_es(datetime(2026, 10, 7, 6)) == "6:00 a. m."
     assert tarjeta.hora_es(datetime(2026, 10, 7, 12)) == "12:00 p. m."
+
+
+def test_la_tarjeta_avisa_si_la_ventana_no_es_seca_aunque_el_modelo_lo_suavice():
+    v = ventanas.Ventana("A", datetime(2026, 10, 7, 18), datetime(2026, 10, 7, 19),
+                         53, 0.0, 33, 0, 43)
+    eleccion = gemma.Eleccion("A", "No se esperan precipitaciones, " * 5, ("agua",), True)
+    prono = pronostico.Pronostico([], AHORA, desde_copia=True, motivo="modo sin conexión")
+    texto = tarjeta.texto(METRO, v, eleccion, prono)
+    assert "Ojo: no es una ventana seca de verdad (53 % de lluvia)." in texto
+    assert "Sin señal (modo sin conexión)" in texto
+    assert max(len(linea) for linea in texto.splitlines()) <= tarjeta.ANCHO + 4
 
 
 def test_ics_en_utc_con_aviso_media_hora_antes():

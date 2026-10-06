@@ -32,6 +32,7 @@ class Pronostico:
     horas: list[Hora]
     descargado: datetime
     desde_copia: bool
+    motivo: str = ""
 
 
 class SinPronostico(RuntimeError):
@@ -72,7 +73,7 @@ def obtener(lugar: Lugar, dias: int, ahora: datetime, sin_conexion: bool = False
         )
     datos = json.loads(copia.read_text(encoding="utf-8"))
     return Pronostico(horas(datos), datetime.fromisoformat(datos["_descargado"]),
-                      desde_copia=True)
+                      desde_copia=True, motivo=motivo)
 
 
 def horas(datos: dict) -> list[Hora]:
