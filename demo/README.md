@@ -2,7 +2,7 @@
 
 [Inicio](../README.md)
 
-Salidas reales de Ventana seca del **martes 6 oct 2026 a la 1:00 a. m.**, con el pronóstico de Open-Meteo y `gemma4:e2b` en una MacBook de 8 GB. Los `.txt` son la salida tal cual; las imágenes y el video se dibujan a partir de ellos con [`scripts/generar_demo.py`](../scripts/generar_demo.py):
+Salidas reales de Ventana seca del **martes 6 oct 2026 a las 12:36 a. m.**, con el pronóstico de Open-Meteo y `gemma4:e2b` en una MacBook de 8 GB. Los `.txt` son la salida tal cual; las imágenes y el video se dibujan a partir de ellos con [`scripts/generar_demo.py`](../scripts/generar_demo.py):
 
 ```sh
 uv run --with pillow python scripts/generar_demo.py

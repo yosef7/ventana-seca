@@ -22,7 +22,7 @@ uv run pytest
 
 ## 2. Ejecuciones reales
 
-Equipo: MacBook con 8 GB de RAM, Ollama 0.35.1, `gemma4:e2b` (4,6 GB, Q4_K_M). Pronóstico real de Open-Meteo descargado entre el 5 oct a las 11:59 p. m. y el 6 oct a la 1:00 a. m.
+Equipo: MacBook con 8 GB de RAM, Ollama 0.35.1, `gemma4:e2b` (4,6 GB, Q4_K_M). Pronóstico real de Open-Meteo descargado entre el 5 oct a las 11:59 p. m. y el 6 oct a las 12:36 a. m.
 
 | Prueba | Resultado | Qué cambió |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ uv run python -m ventana_seca \
   --ruta "7:30 5 de mayo, 8:00 costa del este, 12 pm costa del este, 4 pm costa del este"
 ```
 
-Pronóstico calculado el 6 oct a la 1:00 a. m. Ventana seca recomendó salir a las **8:00 a. m. en Costa del Este** y llevar agua, gorra, bloqueador y capa de lluvia.
+Pronóstico calculado el 6 oct a las 12:21 a. m. y sin cambios a las 12:36 a. m. Ventana seca recomendó salir a las **8:00 a. m. en Costa del Este** y llevar agua, gorra, bloqueador y capa de lluvia.
 
 | Parada | Pronóstico | Qué pasó |
 | --- | --- | --- |
