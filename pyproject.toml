@@ -1,0 +1,14 @@
+[project]
+name = "ventana-seca"
+version = "0.1.0"
+description = "Encuentra la ventana sin lluvia para salir a caminar en Ciudad de Panamá, con IA abierta y local"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

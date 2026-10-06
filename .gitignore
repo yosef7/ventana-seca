@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+.env
+
+# Pronósticos descargados y calendarios generados
+datos/
+*.ics
+
+# Notas privadas: entrega al reto
+privado/
