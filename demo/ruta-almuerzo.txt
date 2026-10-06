@@ -1,0 +1,17 @@
+$ uv run python -m ventana_seca --mi-ruta --preferencia "quiero caminar un rato en la hora del almuerzo"
+┌──────────────────────────────────────────────────────────────────┐
+│ Ventana seca · tu ruta del mar 6 oct                             │
+│                                                                  │
+│    7:30 a. m.  Plaza 5 de Mayo   20 % · 31 °C · seco             │
+│    8:00 a. m.  Costa del Este    18 % · 31 °C · seco             │
+│ → 12:00 p. m.  Costa del Este    66 % · 39 °C · lluvia y calor   │
+│    4:00 p. m.  Costa del Este    88 % · 31 °C · lluvia           │
+│                                                                  │
+│ Para salir: 12:00 p. m. en Costa del Este                        │
+│ Lleva hoy: agua, capa de lluvia, zapatos con agarre              │
+│ Por qué: Aunque hay probabilidad de lluvia, esta ventana te      │
+│   permite caminar al mediodía. Te advierto que la lluvia es alta │
+│   y la sensación térmica será de 39 °C.                          │
+│ Ojo: no es una ventana seca de verdad (66 % de lluvia).          │
+│ Eligió: Gemma, en este equipo                                    │
+└──────────────────────────────────────────────────────────────────┘

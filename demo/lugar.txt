@@ -1,0 +1,10 @@
+$ uv run python -m ventana_seca --lugar metropolitano --duracion 2 --preferencia "temprano, voy con mi hija de 6 años"
+┌────────────────────────────────────────────────────────────────┐
+│ Ventana seca · Parque Natural Metropolitano                    │
+│ Mar 6 oct · 7:00 a. m. – 9:00 a. m.                            │
+│ Lluvia: hasta 20 % (0,0 mm) · Sensación: 31 °C · UV: 1         │
+│ Lleva: agua, gorra, bloqueador, repelente                      │
+│ Por qué: Esta ventana es la más seca y tiene baja probabilidad │
+│   de lluvia, ideal para empezar el día temprano con tu hija.   │
+│ Eligió: Gemma, en este equipo                                  │
+└────────────────────────────────────────────────────────────────┘

@@ -19,6 +19,12 @@ En octubre llueve en Ciudad de Panamá casi todas las tardes. **Ventana seca** m
 
 Salida real del 6 oct con `--preferencia "después del trabajo, no antes de las 4 de la tarde"`. Gemma respetó el horario, pero llamó «poca probabilidad» a un 53 %; la línea **Ojo** la agrega el código justamente para eso.
 
+## Demo
+
+![Tarjeta de la ruta diaria: Plaza 5 de Mayo a las 7:30 a. m. y Costa del Este a las 8:00 a. m., 12:00 p. m. y 4:00 p. m.](demo/ruta.png)
+
+[Video de 31 segundos](demo/ventana-seca-demo.mp4) con las tres escenas. Más detalles en [`demo/`](demo/README.md).
+
 ## Tu ruta diaria
 
 No todo el mundo tiene una mañana libre para un sendero. Muchas veces la salida posible es la de siempre: el tramo a pie al metro, el almuerzo, la vuelta a casa. Con `--ruta` le das tus paradas fijas y Ventana seca te dice cómo estará cada una y en cuál conviene pasar un rato afuera:
@@ -124,6 +130,7 @@ Cubren el cálculo de ventanas con un día típico de octubre (mañana seca, agu
 | --- | --- |
 | [Arquitectura y decisiones](docs/arquitectura.md) | Flujo, módulos, puntaje, decisiones de diseño y por qué abierto |
 | [Validación](docs/validacion.md) | Pruebas automáticas, ejecuciones reales con Gemma y la prueba afuera en una ruta diaria |
+| [Demo](demo/README.md) | Salidas reales del 6 oct, imágenes y video, y cómo regenerarlos |
 
 ## Licencia
 
