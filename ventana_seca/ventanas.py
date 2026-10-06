@@ -24,6 +24,8 @@ class Ventana:
     sensacion_max: float
     uv_max: float
     puntaje: int
+    # Solo en una ruta: la clave del lugar de esa parada.
+    lugar: str = ""
 
     @property
     def buena(self) -> bool:
@@ -69,3 +71,19 @@ def candidatas(horas: list[Hora], duracion_h: int, ahora: datetime,
 
     elegidas.sort(key=lambda v: v.inicio)
     return [replace(v, letra=letra) for letra, v in zip(string.ascii_uppercase, elegidas)]
+
+
+def en_ruta(paradas: list[tuple[datetime, str]], horas_por_lugar: dict[str, list[Hora]],
+            duracion: timedelta) -> list[Ventana]:
+    """Puntúa las paradas fijas de la ruta diaria de la persona, a su hora y en su lugar.
+
+    Una parada a las 7:30 de una hora toma las horas del pronóstico de las 7 y las 8.
+    """
+    resultado = []
+    for inicio, clave in sorted(paradas):
+        fin = inicio + duracion
+        tramo = [h for h in horas_por_lugar[clave]
+                 if h.inicio < fin and inicio < h.inicio + timedelta(hours=1)]
+        if tramo:
+            resultado.append(replace(puntuar(tramo), inicio=inicio, fin=fin, lugar=clave))
+    return [replace(v, letra=letra) for letra, v in zip(string.ascii_uppercase, resultado)]

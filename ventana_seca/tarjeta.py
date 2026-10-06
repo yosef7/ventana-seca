@@ -45,15 +45,57 @@ def texto(lugar, ventana, eleccion, pronostico) -> str:
         # Lo dice el código, no el modelo: un modelo pequeño tiende a suavizar el riesgo.
         lineas.append(f"Ojo: no es una ventana seca de verdad ({v.lluvia_pct} % de lluvia).")
     lineas.append(f"Eligió: {origen}")
-    if pronostico.desde_copia:
-        lineas.append(f"Sin señal ({pronostico.motivo}): pronóstico guardado el "
-                      f"{dia_es(pronostico.descargado)} a las {hora_es(pronostico.descargado)}")
+    return _caja(lineas + _sin_senal([pronostico]))
+
+
+def estado(v) -> str:
+    if v.lluvia_pct >= 50 or v.lluvia_mm >= 1:
+        cielo = "lluvia"
+    elif v.lluvia_pct >= 30:
+        cielo = "quizá llueve"
+    else:
+        cielo = "seco"
+    return cielo + (" y calor" if v.sensacion_max > 32 else "")
+
+
+def _caja(lineas: list[str]) -> str:
+    # Las líneas cortas quedan tal cual, con su alineación; solo se parten las largas.
     lineas = [corta for linea in lineas
-              for corta in textwrap.wrap(linea, ANCHO, subsequent_indent="  ")]
+              for corta in ([linea] if len(linea) <= ANCHO
+                            else textwrap.wrap(linea, ANCHO, subsequent_indent="  "))]
     ancho = max(len(linea) for linea in lineas)
     borde = "─" * (ancho + 2)
     cuerpo = [f"│ {linea.ljust(ancho)} │" for linea in lineas]
     return "\n".join([f"┌{borde}┐", *cuerpo, f"└{borde}┘"])
+
+
+def _sin_senal(pronosticos) -> list[str]:
+    return [f"Sin señal ({p.motivo}): pronóstico guardado el {dia_es(p.descargado)} "
+            f"a las {hora_es(p.descargado)}" for p in pronosticos if p.desde_copia][:1]
+
+
+def texto_ruta(paradas, eleccion, pronosticos, nombres: dict[str, str]) -> str:
+    """Toda la ruta en una caja: cómo está cada parada y cuál conviene para salir."""
+    elegida = next(v for v in paradas if v.letra == eleccion.letra)
+    ancho_hora = max(len(hora_es(v.inicio)) for v in paradas)
+    ancho_lugar = max(len(nombres[v.lugar]) for v in paradas)
+    origen = "Gemma, en este equipo" if eleccion.por_gemma else "regla fija (sin IA)"
+    lineas = [f"Ventana seca · tu ruta del {dia_es(paradas[0].inicio)}", ""]
+    for v in paradas:
+        marca = "→" if v is elegida else " "
+        lineas.append(f"{marca} {hora_es(v.inicio).rjust(ancho_hora)}  "
+                      f"{nombres[v.lugar].ljust(ancho_lugar)}  {v.lluvia_pct:>3} % · "
+                      f"{v.sensacion_max:.0f} °C · {estado(v)}")
+    lineas += [
+        "",
+        f"Para salir: {hora_es(elegida.inicio)} en {nombres[elegida.lugar]}",
+        f"Lleva hoy: {', '.join(eleccion.llevar)}",
+        f"Por qué: {eleccion.motivo}",
+    ]
+    if not elegida.buena:
+        lineas.append(f"Ojo: no es una ventana seca de verdad ({elegida.lluvia_pct} % de lluvia).")
+    lineas.append(f"Eligió: {origen}")
+    return _caja(lineas + _sin_senal(pronosticos))
 
 
 def _utc(fecha: datetime) -> str:

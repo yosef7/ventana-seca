@@ -1,10 +1,10 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from urllib.error import URLError
 
 import pytest
 
-from ventana_seca import gemma, pronostico, tarjeta, ventanas
+from ventana_seca import gemma, pronostico, ruta, tarjeta, ventanas
 from ventana_seca.__main__ import main
 from ventana_seca.lugares import LUGARES
 
@@ -87,7 +87,8 @@ def test_gemma_elige_segun_la_preferencia_y_suma_imprescindibles():
     lista = candidatas()
     tarde = lista[-1]
     eleccion = gemma.elegir(lista, METRO, "en la tarde", cliente=lambda _: respuesta(
-        {"letra": tarde.letra, "motivo": "  Vas  después del trabajo. ", "llevar": ["agua"]}))
+        {"ventana": gemma.etiqueta(tarde), "motivo": "  Vas  después del trabajo. ",
+         "llevar": ["agua"]}))
     assert eleccion.por_gemma
     assert eleccion.letra == tarde.letra
     assert eleccion.motivo == "Vas después del trabajo."
@@ -97,7 +98,7 @@ def test_gemma_elige_segun_la_preferencia_y_suma_imprescindibles():
 def test_gemma_no_puede_inventar_ventanas_ni_objetos():
     lista = candidatas()
     eleccion = gemma.elegir(lista, CINTA, cliente=lambda _: respuesta(
-        {"letra": "Z", "motivo": "Inventada", "llevar": ["dron"]}))
+        {"ventana": "dom 31 oct, 3:00 a. m.", "motivo": "Inventada", "llevar": ["dron"]}))
     assert not eleccion.por_gemma
     assert eleccion.letra == gemma.por_regla(lista).letra
     assert "dron" not in eleccion.llevar
@@ -106,7 +107,8 @@ def test_gemma_no_puede_inventar_ventanas_ni_objetos():
 def test_objetos_fuera_de_lista_se_descartan():
     lista = candidatas()
     eleccion = gemma.elegir(lista, CINTA, cliente=lambda _: respuesta(
-        {"letra": "A", "motivo": "Temprano.", "llevar": ["ropa de cambio", "paraguas"]}))
+        {"ventana": gemma.etiqueta(lista[0]), "motivo": "Temprano.",
+         "llevar": ["ropa de cambio", "paraguas"]}))
     assert "ropa de cambio" in eleccion.llevar
     assert "paraguas" not in eleccion.llevar
 
@@ -125,7 +127,9 @@ def test_sin_ollama_decide_la_regla():
 def test_el_pedido_limita_la_letra_a_las_candidatas_y_no_razona_de_mas():
     lista = candidatas()
     cuerpo = gemma.pedido(lista, METRO, "", gemma.MODELO)
-    assert cuerpo["format"]["properties"]["letra"]["enum"] == [v.letra for v in lista]
+    assert cuerpo["format"]["properties"]["ventana"]["enum"] == [
+        gemma.etiqueta(v) for v in lista]
+    assert all(f"{v.letra}:" not in cuerpo["messages"][1]["content"] for v in lista)
     assert cuerpo["think"] is False
     assert "sin preferencia" in cuerpo["messages"][1]["content"]
 
@@ -197,3 +201,86 @@ def test_comando_completo_sin_conexion_y_sin_ia(tmp_path, monkeypatch, capsys):
     assert "regla fija" in texto
     assert "Sin señal" in texto
     assert salida_ics.read_text().startswith("BEGIN:VCALENDAR")
+
+
+# Ruta diaria ---------------------------------------------------------------
+
+RUTA = "7:30 5 de mayo, 8:00 costa del este, 12 pm Costa del Este, 4pm costa-del-este"
+
+
+def test_leer_ruta_en_varios_formatos():
+    assert ruta.leer(RUTA) == [
+        (time(7, 30), "5-de-mayo"), (time(8, 0), "costa-del-este"),
+        (time(12, 0), "costa-del-este"), (time(16, 0), "costa-del-este")]
+    assert ruta.leer("16:00 Cinta Costera, 12 am amador") == [
+        (time(0, 0), "amador"), (time(16, 0), "cinta-costera")]
+
+
+@pytest.mark.parametrize("texto", ["7:30", "25:00 amador", "8:00 la luna"])
+def test_ruta_mal_escrita_se_explica(texto):
+    with pytest.raises(ValueError):
+        ruta.leer(texto)
+
+
+def test_la_ruta_es_de_hoy_mientras_quede_alguna_parada():
+    paradas = ruta.leer(RUTA)
+    a_las_10 = ruta.en_fecha(paradas, datetime(2026, 10, 6, 10, 0))
+    assert [t.hour for t, _ in a_las_10] == [12, 16]
+    de_noche = ruta.en_fecha(paradas, datetime(2026, 10, 6, 20, 0))
+    assert de_noche[0][0] == datetime(2026, 10, 7, 7, 30)
+    assert len(de_noche) == 4
+
+
+def paradas_de_octubre():
+    horas = pronostico.horas(octubre())
+    paradas = ruta.en_fecha(ruta.leer(RUTA), AHORA)
+    return ventanas.en_ruta(paradas, {"5-de-mayo": horas, "costa-del-este": horas},
+                            timedelta(hours=1))
+
+
+def test_cada_parada_usa_las_horas_que_toca():
+    lista = paradas_de_octubre()
+    assert [v.letra for v in lista] == list("ABCD")
+    siete_y_media = lista[0]
+    assert siete_y_media.inicio == datetime(2026, 10, 6, 7, 30)
+    assert siete_y_media.fin == datetime(2026, 10, 6, 8, 30)
+    assert lista[3].lluvia_pct == 85  # 4 p. m.: el aguacero de la tarde
+    assert lista[3].lugar == "costa-del-este"
+
+
+def test_en_ruta_la_capa_de_la_tarde_se_lleva_desde_la_manana():
+    lista = paradas_de_octubre()
+    manana = lista[1]
+    eleccion = gemma.elegir(lista, None, cliente=lambda _: respuesta(
+        {"ventana": gemma.etiqueta(manana), "motivo": "Antes del calor.", "llevar": []}))
+    assert eleccion.letra == manana.letra
+    assert "capa de lluvia" in eleccion.llevar
+    assert "Costa del Este" in gemma.etiqueta(manana)
+
+
+def test_tarjeta_de_ruta_muestra_todas_las_paradas():
+    lista = paradas_de_octubre()
+    eleccion = gemma.Eleccion("D", "Es tu única salida.", ("agua", "capa de lluvia"), True)
+    prono = pronostico.Pronostico([], AHORA, desde_copia=False)
+    nombres = {"5-de-mayo": "Plaza 5 de Mayo", "costa-del-este": "Costa del Este"}
+    texto = tarjeta.texto_ruta(lista, eleccion, [prono], nombres)
+    lineas = texto.splitlines()
+    assert sum("Costa del Este" in linea and "°C" in linea for linea in lineas) == 3
+    assert any(linea.startswith("│ →  4:00 p. m.") for linea in lineas)
+    assert "Para salir: 4:00 p. m. en Costa del Este" in texto
+    assert "Ojo: no es una ventana seca de verdad (85 % de lluvia)." in texto
+
+
+def test_comando_con_ruta_guarda_y_reusa(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "datos").mkdir()
+    hoy = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    datos = octubre(3, desde=hoy) | {"_descargado": "2026-10-06T05:00"}
+    for clave in ("5-de-mayo", "costa-del-este"):
+        (tmp_path / "datos" / f"{clave}.json").write_text(json.dumps(datos))
+
+    assert main(["--sin-conexion", "--sin-ia", "--ruta", RUTA]) == 0
+    assert "tu ruta del" in capsys.readouterr().out
+    assert (tmp_path / "datos" / "ruta.txt").read_text() == RUTA
+    assert main(["--sin-conexion", "--sin-ia", "--mi-ruta"]) == 0
+    assert "Para salir:" in capsys.readouterr().out
