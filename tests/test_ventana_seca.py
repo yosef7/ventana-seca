@@ -124,7 +124,7 @@ def test_sin_ollama_decide_la_regla():
     assert eleccion.motivo
 
 
-def test_el_pedido_limita_la_letra_a_las_candidatas_y_no_razona_de_mas():
+def test_el_pedido_limita_la_eleccion_a_las_candidatas_y_no_razona_de_mas():
     lista = candidatas()
     cuerpo = gemma.pedido(lista, METRO, "", gemma.MODELO)
     assert cuerpo["format"]["properties"]["ventana"]["enum"] == [

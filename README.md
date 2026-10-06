@@ -118,6 +118,13 @@ Cubren el cálculo de ventanas con un día típico de octubre (mañana seca, agu
 - Un pronóstico de lluvia tropical es incierto: una ventana con 20 % puede mojarte. La tarjeta dice la cifra para que decidas tú.
 - Ventana seca no conoce cierres de senderos ni horarios de los parques.
 
+## Documentación
+
+| Documento | Qué contiene |
+| --- | --- |
+| [Arquitectura y decisiones](docs/arquitectura.md) | Flujo, módulos, puntaje, decisiones de diseño y por qué abierto |
+| [Validación](docs/validacion.md) | Pruebas automáticas, ejecuciones reales con Gemma y la prueba afuera en una ruta diaria |
+
 ## Licencia
 
 Código bajo [MIT](LICENSE). Gemma 4 se distribuye bajo Apache 2.0, según la licencia que muestra `ollama show gemma4:e2b --license`. Los datos del pronóstico son de [Open-Meteo](https://open-meteo.com/), con licencia CC BY 4.0.
