@@ -2,7 +2,7 @@
 
 En octubre llueve en Ciudad de Panamá casi todas las tardes. **Ventana seca** mira el pronóstico por hora de los próximos días, calcula los tramos de luz con menos lluvia, calor y sol fuerte para salir a caminar o correr, y deja que **Gemma**, un modelo de pesos abiertos que corre en tu propio equipo con Ollama, escoja uno según lo que tú le pidas. El resultado es una tarjeta de un vistazo y un recordatorio en el calendario que avisa media hora antes, para que guardes el teléfono y salgas.
 
-> **In English.** *Ventana seca* ("dry window") finds the best rain-free window to go outside in Panama City during the rainy season. It scores hourly forecasts from Open-Meteo, lets Google's open-weight **Gemma** model, running locally through Ollama, pick one of those windows based on what you ask for in plain words, and writes a one-glance card plus a calendar reminder. Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 1: *Touch Grass*.
+> **In English.** *Ventana seca* ("dry window") finds the best rain-free window to go outside in Panama City during the rainy season. It scores hourly forecasts from Open-Meteo, lets Google's open-weight **Gemma** model, running locally through Ollama, pick one of those windows based on what you ask for in plain words, and writes a one-glance card plus a calendar reminder. Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 1: *Touch Grass*. Read the [write-up on DEV](https://dev.to/arnulfo_07/ventana-seca-finding-the-dry-hour-to-get-outside-in-panamas-rainy-season-with-gemma-on-my-laptop-44fd).
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
@@ -131,6 +131,7 @@ Cubren el cálculo de ventanas con un día típico de octubre (mañana seca, agu
 | [Arquitectura y decisiones](docs/arquitectura.md) | Flujo, módulos, puntaje, decisiones de diseño y por qué abierto |
 | [Validación](docs/validacion.md) | Pruebas automáticas, ejecuciones reales con Gemma y la prueba afuera en una ruta diaria |
 | [Demo](demo/README.md) | Salidas reales del 6 oct, imágenes y video, y cómo regenerarlos |
+| [Artículo en DEV](https://dev.to/arnulfo_07/ventana-seca-finding-the-dry-hour-to-get-outside-in-panamas-rainy-season-with-gemma-on-my-laptop-44fd) | Entrega al reto *Touch Grass*, publicada el 6 oct 2026, en inglés |
 
 ## Licencia
 
