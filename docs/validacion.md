@@ -47,11 +47,19 @@ uv run python -m ventana_seca \
 
 Pronóstico calculado el 6 oct a las 12:21 a. m. y sin cambios a las 12:36 a. m. Ventana seca recomendó salir a las **8:00 a. m. en Costa del Este** y llevar agua, gorra, bloqueador y capa de lluvia.
 
-| Parada | Pronóstico | Qué pasó |
-| --- | --- | --- |
-| 7:30 a. m. · Plaza 5 de Mayo | 20 % · 31 °C · seco | [Pendiente] |
-| 8:00 a. m. · Costa del Este | 18 % · 31 °C · seco | [Pendiente] |
-| 12:00 p. m. · Costa del Este | 66 % · 39 °C · lluvia y calor | [Pendiente] |
-| 4:00 p. m. · Costa del Este | 88 % · 31 °C · lluvia | [Pendiente] |
+| Parada | Pronóstico | Qué pasó | Registro horario de Open-Meteo |
+| --- | --- | --- | --- |
+| 7:30 a. m. · Plaza 5 de Mayo | 20 % · 31 °C · seco | Seco | 0 mm a las 7:00 y a las 8:00 a. m. |
+| 8:00 a. m. · Costa del Este | 18 % · 31 °C · seco | Seco y nublado. Fotos de las 8:15 a. m.: cielo gris y piso seco | 0 mm de 6:00 a 9:00 a. m. |
+| 12:00 p. m. · Costa del Este | 66 % · 39 °C · lluvia y calor | Llovió, como anunciaba. Foto de las 12:43 p. m., desde una ventana: lluvia en el vidrio y el horizonte borroso | Tormenta de 11:00 a. m. a 1:00 p. m.: 1,6 mm, **8,3 mm** a las 12:00 y 2,0 mm |
+| 4:00 p. m. · Costa del Este | 88 % · 31 °C · lluvia | Llovió, como anunciaba. Fotos de las 5:52 p. m.: pavimento mojado y cielo cargado | 0 mm de 2:00 a 7:00 p. m. |
 
-[Pendiente]: completar la tabla al final del día y agregar la foto de la salida de las 8:00 a. m.
+**Resultado:** el día salió como dijo la tarjeta. La salida recomendada, a las 8:00 a. m. en Costa del Este, fue seca, y la capa de lluvia que entró en la lista desde la mañana hizo falta al mediodía y en la tarde.
+
+La columna «Qué pasó» es lo que vio el autor en cada parada. El registro horario se consultó en Open-Meteo el 6 oct a las 9:00 p. m. para las mismas coordenadas de cada lugar; es la estimación del modelo para su celda, no un pluviómetro. Coincide en la mañana seca y en el aguacero del mediodía, pero marca 0 mm a las 4:00 p. m., cuando el autor vio llover: un chubasco local de la tarde puede quedar fuera de una celda de varios kilómetros.
+
+| 8:15 a. m. · Costa del Este | 12:43 p. m. · Costa del Este | 5:52 p. m. · Costa del Este |
+| --- | --- | --- |
+| <img src="fotos/2026-10-06-0815-costa-del-este.jpg" width="320" alt="Costa del Este a las 8:15 a. m. del 6 oct: cielo nublado y piso seco"> | <img src="fotos/2026-10-06-1243-costa-del-este.jpg" width="180" alt="Costa del Este a las 12:43 p. m. del 6 oct, desde una ventana: lluvia en el vidrio y el horizonte borroso"> | <img src="fotos/2026-10-06-1752-costa-del-este.jpg" width="180" alt="Costa del Este a las 5:52 p. m. del 6 oct: pavimento mojado y cielo gris"> |
+
+Las fotos se tomaron con un iPhone 14 Plus. Las de [`fotos/`](fotos/) son copias en JPG sin metadatos: se les quitó la ubicación GPS exacta, porque basta con el nombre del lugar. A la del mediodía se le recortó la franja inferior, donde se veían pantallas de trabajo.

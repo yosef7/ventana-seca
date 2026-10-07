@@ -10,3 +10,6 @@ datos/
 
 # Notas privadas: entrega al reto
 privado/
+
+# Fotos originales con ubicación GPS (se publican copias sin metadatos en docs/fotos/)
+docs/Photos/
